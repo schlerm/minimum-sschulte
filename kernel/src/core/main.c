@@ -2,6 +2,9 @@
 #include "minemu/trap.h"
 #include "minemu/trace.h"
 #include "minemu/console.h"
+#include "minemu/irq.h"
+#include "minemu/shell.h"
+#include "minemu/uart.h"
 
 void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
     if ((uintptr_t)boot_info != MINEMU_BOOT_INFO_VADDR ||
@@ -19,5 +22,7 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
 
     console_printf("hello world\n");
 
-    minemu_fail_stop();
+    uart_init();
+    minemu_irq_enable();
+    shell_run();
 }

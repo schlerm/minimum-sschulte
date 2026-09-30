@@ -8,7 +8,10 @@ RUNTIME := $(BUILD)/libminemu_kernel.a
 
 CORE_OBJECT := $(BUILD)/core/main.o \
 	$(BUILD)/core/uart.o \
-	$(BUILD)/core/console.o
+	$(BUILD)/core/console.o \
+	$(BUILD)/core/interrupt.o \
+	$(BUILD)/core/shell.o \
+	$(BUILD)/startup/irq.o
 RUNTIME_OBJECTS := \
 	$(BUILD)/runtime/block.o \
 	$(BUILD)/runtime/exception.o \
