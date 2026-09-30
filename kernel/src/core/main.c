@@ -1,7 +1,7 @@
 #include "minemu/boot.h"
 #include "minemu/trap.h"
 #include "minemu/trace.h"
-#include "minemu/platform.h"
+#include "minemu/console.h"
 
 void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
     if ((uintptr_t)boot_info != MINEMU_BOOT_INFO_VADDR ||
@@ -17,11 +17,7 @@ void minemu_kernel_main(const struct minemu_boot_info *boot_info) {
     }
     minemu_trace_event(1);
 
-    const char message[] = "hello world\n";
-    for (size_t index = 0; index < sizeof(message) - 1; ++index) {
-        MINEMU_UART0->tx_data = (uint8_t)message[index];
-    }
-    (void)boot_info;
+    console_printf("hello world\n");
 
     minemu_fail_stop();
 }
