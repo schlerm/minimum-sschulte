@@ -58,3 +58,10 @@ cc -std=c11 -Wall -Wextra -Werror -Ikernel/include \
   -o /tmp/minimum-shell-test
 /tmp/minimum-shell-test
 ```
+
+## User-mode shell (HW2)
+
+The default image now runs the user shell. Run `just test-all hw2` in the course
+container. The retained kernel-shell tests above describe the earlier HW1 code.
+See [the user-shell notes](../docs/msh.md) for current behavior, documented
+assignment/fixture differences, and host-side `tests/unit/user-shell.c` checks.

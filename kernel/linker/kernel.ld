@@ -60,4 +60,11 @@ SECTIONS
   __minemu_irq_stack_top_paddr = __minemu_irq_stack_top - 0x80000000;
   __minemu_abt_stack_top_paddr = __minemu_abt_stack_top - 0x80000000;
   __minemu_und_stack_top_paddr = __minemu_und_stack_top - 0x80000000;
+
+  /* The user loader initializes these pages before mapping them into USR.
+   * Reserve their addresses without making the Boot ROM zero the whole pool.
+   */
+  . = ALIGN(4096);
+  .user_pages (NOLOAD) : { *(.user_pages) } :NONE
+  ASSERT(. <= 0xc4000000, "kernel storage exceeds the RAM direct map")
 }

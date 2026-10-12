@@ -22,7 +22,10 @@ static uint32_t system_rom_tables[SYSTEM_ROM_TABLE_COUNT][1024]
     __attribute__((aligned(MINEMU_PAGE_SIZE)));
 static uint32_t user_page_table[1024] __attribute__((aligned(MINEMU_PAGE_SIZE)));
 static uint8_t user_image_pages[MAX_USER_IMAGE_PAGES][MINEMU_PAGE_SIZE]
-    __attribute__((aligned(MINEMU_PAGE_SIZE)));
+    /* Each allocated page is zeroed by user_page_index. Reserve this storage
+     * outside boot-loaded segments to avoid also clearing all unused pages.
+     */
+    __attribute__((section(".user_pages"), aligned(MINEMU_PAGE_SIZE)));
 static uint8_t user_stack[MINEMU_PAGE_SIZE] __attribute__((aligned(MINEMU_PAGE_SIZE)));
 static uint32_t user_page_vaddrs[MAX_USER_IMAGE_PAGES];
 static uint32_t user_page_flags[MAX_USER_IMAGE_PAGES];

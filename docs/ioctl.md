@@ -1,9 +1,10 @@
 # User-mode ioctl implementation
 
 The kernel now boots the packaged `minimum-user` module in A32 user mode.
-The current user program prints `hello world\n` through `ioctl` and idles.
+The current user program runs `msh` using `ioctl` for all input and output.
+The independent hello fixture still exercises user-mode hello world.
 The old kernel shell source is retained but is no longer linked or called.
-Moving the shell into a user program is separate Assignment 2 Task 2 work.
+See [msh.md](msh.md) for the user-shell implementation and behavior.
 
 ## ABI and request behavior
 
@@ -56,6 +57,9 @@ with the segment permissions. Kernel and MMIO mappings stay supervisor-only.
 There is one address space, up to 16 image pages (64 KiB), and a 4 KiB user
 stack at 0x007ff000-0x00800000. Image mappings lie in 0x00400000-0x007ff000.
 `startup/user.S` initializes the banked user SP/LR and enters user mode.
+The image-page pool is reserved in a non-loaded linker section. The loader
+zeros each allocated page before mapping it; Boot ROM need not also zero all
+unused pool pages, keeping startup within the prompt test tick budget.
 
 `user_range_valid` checks bounds without overflowing address arithmetic, then
 checks every covered page for validity, user access, and requested permissions.
@@ -106,8 +110,7 @@ and preservation of RNG state and queued input on rejected requests.
 It uses separate RX and RW ELF segments to exercise real page permissions.
 The trace contains a single success marker; any failed check records its number.
 
-The HW2 msh tests require the later user-shell migration and are not expected to
-pass while the packaged program is hello world.
+Run `just test-all hw2` to include all shell tests as well as these syscall tests.
 
 ## Supplied-code attribution
 
