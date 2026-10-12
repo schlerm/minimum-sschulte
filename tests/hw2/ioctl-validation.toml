@@ -1,0 +1,16 @@
+image = "fixtures/ioctl-validation/build/hw2-ioctl-validation.img"
+boot_rom = "../../bootloader/bootloader.bin"
+max_ticks = 4000000
+
+[[inputs]]
+at_tick = 2000000
+uart = 0
+data = "abc"
+
+[assert]
+uart0_contains = "ioctl validation passed\n"
+execution_lifecycle = "paused"
+shutdown_lifecycle = "stopped"
+mmu_enabled = true
+cpu_mode = "user"
+trace_values = [0x600d]

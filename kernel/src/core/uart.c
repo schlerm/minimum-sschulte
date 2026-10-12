@@ -75,6 +75,42 @@ void uart_putc(char c) {
     MINEMU_UART0->tx_data = (uint8_t)c;
 }
 
+int32_t uart_read(uint8_t *destination, uint32_t count) {
+    if (count == 0) {
+        return 0;
+    }
+    uint32_t status = irq_save();
+    /* SVC masks IRQs, so collect any bytes whose IRQ has not yet run. */
+    uart_handle_irq();
+    uint32_t copied = 0;
+    while (copied < count && rx_tail != rx_head) {
+        unsigned int byte = rx_buffer[rx_tail];
+        if (byte == RX_LOST) {
+            /* Return existing bytes first; report the loss on the next read. */
+            if (copied != 0) {
+                break;
+            }
+            rx_tail = (rx_tail + 1u) % RX_SIZE;
+            irq_restore(status);
+            return -1;
+        }
+        rx_tail = (rx_tail + 1u) % RX_SIZE;
+        destination[copied++] = (uint8_t)byte;
+    }
+    irq_restore(status);
+    return (int32_t)copied;
+}
+
+uint32_t uart_status(void) {
+    uint32_t saved = irq_save();
+    uint32_t status = MINEMU_UART0->status;
+    if (rx_tail != rx_head) {
+        status |= MINEMU_UART_STATUS_RX_READY;
+    }
+    irq_restore(saved);
+    return status & (MINEMU_UART_STATUS_RX_READY | MINEMU_UART_STATUS_TX_READY);
+}
+
 void uart_puts(const char *text) {
     while (*text != '\0') {
         uart_putc(*text++);

@@ -10,8 +10,11 @@ CORE_OBJECT := $(BUILD)/core/main.o \
 	$(BUILD)/core/uart.o \
 	$(BUILD)/core/console.o \
 	$(BUILD)/core/interrupt.o \
-	$(BUILD)/core/shell.o \
-	$(BUILD)/startup/irq.o
+	$(BUILD)/core/syscall.o \
+	$(BUILD)/core/user.o \
+	$(BUILD)/startup/irq.o \
+	$(BUILD)/startup/svc.o \
+	$(BUILD)/startup/user.o
 RUNTIME_OBJECTS := \
 	$(BUILD)/runtime/block.o \
 	$(BUILD)/runtime/exception.o \
